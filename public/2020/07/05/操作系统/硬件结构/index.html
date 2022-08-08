@@ -44,7 +44,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://unpkg.com/volantis-static@0.0.1654736714924/media/org.volantis/blog/favicon/android-chrome-192x192.png">
 <meta property="article:published_time" content="2020-07-04T19:00:00.000Z">
-<meta property="article:modified_time" content="2022-07-25T08:28:22.631Z">
+<meta property="article:modified_time" content="2022-08-03T01:23:51.229Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="硬件结构">
 <meta name="twitter:card" content="summary">
@@ -1916,7 +1916,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     debug: false,
     cdn: {"js":{"app":"/js/app.af2d54c8.js","parallax":"/js/plugins/parallax.8bf0ab10.js","rightMenu":"/js/plugins/rightMenu.d9437285.js","rightMenus":"/js/plugins/rightMenus.1aa99ff1.js","sites":"/js/plugins/tags/sites.76bf19b8.js","friends":"/js/plugins/tags/friends.f372da57.js","contributors":"/js/plugins/tags/contributors.aec80453.js","search":"/js/search/hexo.0e52f222.js"},"css":{"style":"/css/style.d826456f.css"}},
     default: {"avatar":"https://unpkg.com/volantis-static@0.0.1654736714924/media/placeholder/avatar/round/3442075.svg","link":"https://unpkg.com/volantis-static@0.0.1654736714924/media/placeholder/link/8f277b4ee0ecd.svg","cover":"https://unpkg.com/volantis-static@0.0.1654736714924/media/placeholder/cover/76b86c0226ffd.svg","image":"https://unpkg.com/volantis-static@0.0.1654736714924/media/placeholder/image/2659360.svg"},
-    lastupdate: new Date(1659402214868),
+    lastupdate: new Date(1659577073672),
     sidebar: {
       for_page: ["blogger","category","tagcloud","donate"],
       for_post: ["toc"],
@@ -2821,8 +2821,80 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 <li>时钟周期时间：超频技术，打开超频意味着把CPU内部时钟调快了。代价是热量和崩溃。</li>
 </ul>
 <p>很多厂商为了跑分而跑分，基本都是在这三个方面入手的哦，特别是超频这一块</p>
-</div><div class="story post-story"><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h1 id="1-2-磁盘比内存缓慢几万倍？"><a href="#1-2-磁盘比内存缓慢几万倍？" class="headerlink" title="1.2 磁盘比内存缓慢几万倍？"></a>1.2 磁盘比内存缓慢几万倍？</h1><p>1</p>
-<p>2</p>
+</div><div class="story post-story"><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h1 id="1-2-磁盘比内存缓慢几万倍？"><a href="#1-2-磁盘比内存缓慢几万倍？" class="headerlink" title="1.2 磁盘比内存缓慢几万倍？"></a>1.2 磁盘比内存缓慢几万倍？</h1><h2 id="存储器的层次结构是怎么样的呢？"><a href="#存储器的层次结构是怎么样的呢？" class="headerlink" title="存储器的层次结构是怎么样的呢？"></a>存储器的层次结构是怎么样的呢？</h2><p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/2054/1658828145237-de892ec8-24c2-49d9-b268-49b9910ad864.png" class="lazyload" data-srcset="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/2054/1658828145237-de892ec8-24c2-49d9-b268-49b9910ad864.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="img"></p>
+<p>理解存储器的层次结构的过程可以当作在图书馆看书。我们的大脑好比CPU，我们的运算速度很快，但是我们每次能处理的信息很少，就好像<strong>寄存器</strong>，容量很小但是很快。<strong>L1,L2,L3缓存</strong>就好像是短期记忆和长期记忆，访问时没有那么快，需要一点时间回忆一下。如果我们需要的东西，我们根本不记得，我们就需要去翻书，桌上触手可及的书就好像<strong>内存</strong>，每次翻阅都是在重新记到脑子里去，而图书馆书架上的书就好像<strong>硬盘</strong>，我们每次都需要先找到，然后开始看书，然后记到脑子里。</p>
+<p>对于存储器，运行速度越快，成本越高,所以为啥寄存器的容量比较小，磁盘的内存比较大。另外，一个比较好的CPU的价格大于内存条+磁盘的价格。</p>
+<p>接下来详细的了解一下</p>
+</div><div class="story post-story"><h2 id="各个存储器的细节："><a href="#各个存储器的细节：" class="headerlink" title="各个存储器的细节："></a>各个存储器的细节：</h2><p><strong>寄存器</strong></p>
+<ul>
+<li>32 位 CPU 中大多数寄存器可以存储 4 个字节；</li>
+<li>64 位 CPU 中大多数寄存器可以存储 8 个字节。</li>
+</ul>
+<p>寄存器的访问速度非常快，一般是半个CPU时钟周期，CPU时钟周期和CPU主频息息相关。</p>
+<p> 2 GHz 主频的 CPU，那么它的时钟周期就是 1&#x2F;2G，也就是 0.5ns（纳秒）。</p>
+<p><strong>CPU cahce</strong></p>
+<p>CPU缓存使用的是SRAM（<em><strong>Static Random-Access</strong></em> <strong>Memory</strong>静态随机存储芯片）芯片</p>
+<p>SRAM之所以叫做静态存储器的，是因为只要有电，数据就可以一直保持，断电就会丢失。</p>
+<p>在 SRAM 里面，一个 bit 的数据，通常需要 6 个晶体管，所以 SRAM 的存储密度不高，同样的物理空间下，能存储的数据是有限的，不过也因为 SRAM 的电路简单，所以访问速度非常快。</p>
+<p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/2054/1658914431689-244ab70b-3a7d-47bd-bba5-c9dec5dee91f.png" class="lazyload" data-srcset="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/2054/1658914431689-244ab70b-3a7d-47bd-bba5-c9dec5dee91f.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="img"></p>
+<p><strong>L1cache</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cat /sys/devices/system/cpu/cpu0/cache/index0/size 查看 </span><br></pre></td></tr></table></figure>
+
+<p>index0 , 1 , 2 , 3 分别是 数据缓存，指令缓存，L2, L3</p>
+<p><strong>内存</strong></p>
+<p>DRAM随机存储芯片。动态是因为数据被存储在电容中，电容会不断漏电，需要定时刷新才能保证数据不被丢失。</p>
+<p><strong>硬盘</strong></p>
+<p>SSD固态硬盘 HDD机械硬盘</p>
+<p>断电后不会丢失</p>
+</div><div class="story post-story"><h2 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h2><p>可以发现，不同的存储器之间性能差距很大，构造存储器分级很有意义，分级的目的是要构造<strong>缓存</strong>体系</p>
+<p>CPU怎么知道要访问的内存数据是否在CPU cache中</p>
+<h1 id="1-3如何写出让CPU跑得更快的程序"><a href="#1-3如何写出让CPU跑得更快的程序" class="headerlink" title="1.3如何写出让CPU跑得更快的程序"></a>1.3如何写出让CPU跑得更快的程序</h1><p>在上面的基础上知道了层级结构之后，我们还需要了解一下CPU cache 的数据结构和读取过程是怎么样的，才能根据此得出如何让程序在CPU层面跑的更快。</p>
+<p>L1cache分为数据缓存和指令缓存，L1cache 和 L2cache都是每个CPU核心独有的，L3是多个CPU核心共享的。</p>
+</div><div class="story post-story"><h2 id="CPU是怎么读数据的？"><a href="#CPU是怎么读数据的？" class="headerlink" title="CPU是怎么读数据的？"></a>CPU是怎么读数据的？</h2><h3 id="CPU-cache的结构"><a href="#CPU-cache的结构" class="headerlink" title="CPU cache的结构"></a>CPU cache的结构</h3><p>由多个cache line组成，同时cache line也是CPU读取内存的基本单位。</p>
+<p>cache line 由各种标志tag + 数据块Data Block组成</p>
+<p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/2054/1659427429705-d742a295-3b78-48c9-884c-ae47e9e14aa1.png" class="lazyload" data-srcset="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/2054/1659427429705-d742a295-3b78-48c9-884c-ae47e9e14aa1.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="img"></p>
+<p>CPU读取内存数据时，不是一个元素一个元素的读，而是一块一块，每一块就是cache line 缓存块</p>
+<p>查看linux缓存块大小的指令 如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /sys/devices/system/cpu/cpu0/cache/index0/coherency_line_size</span><br></pre></td></tr></table></figure>
+
+<p>举个例子，一个数组有100个元素，每个元素4个字节，CPU会顺序读取16个元素到cpu cache，下次就直接读cache就好了，能够提高性能。</p>
+<p>在CPU中，不管数据存不存在缓存中，都会先访问cache，只有当cache找不到数据，才会去读取内存。</p>
+<p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/2054/1659428356850-4b40e454-687a-4cb6-aa4f-1a861bca6494.png" class="lazyload" data-srcset="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/2054/1659428356850-4b40e454-687a-4cb6-aa4f-1a861bca6494.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="img"></p>
+<p>那CPU怎么知道访问的内存数据在不在缓存中呢，如果在又怎么找呢？</p>
+<p>从<strong>直接映射Cache*<em><strong>（</strong></em></strong>Direct Mapped Cache***<strong>）</strong>说起，</p>
+<p>前面提到，CPU访问内存的时候读取的是一块块的cache line大小的数据，这在内存中叫做内存块（Block）。直接映射Cache就是把内存块的地址始终映射在一个CPU cache line地址。实现方式就是“取模运算”。</p>
+<p>举个例子，内存共被划分为 32 个内存块，CPU Cache 共有 8 个 CPU Cache Line，假设 CPU 想要访问第 15 号内存块，如果 15 号内存块中的数据已经缓存在 CPU Cache Line 中的话，则是一定映射在 7 号 CPU Cache Line 中，因为 15 % 8 的值是 7。</p>
+<p>这个时候就会产生多个内存块同时映射在一个内存块上。</p>
+<p>因此为了区别不同的内存块，在对应的CPU cache line中，会存储一个<strong>tag（组标记）</strong>，存储记录当前cacheline对应的内存块，以此来区别不同的内存块</p>
+<p>除了组标记tag以外，还有两个信息：</p>
+<ul>
+<li>数据块（从内存中来的）</li>
+<li>有效位，有效位是0则CPU直接访问内存重新加载数据</li>
+</ul>
+<p>CPU读取cpu cache line 的时候并不是读取整个数据块，而是读取所需要的一个<strong>数据片段，</strong>这样的数据叫做字（word），怎么在cache line中找到这个字呢？通过<strong>偏移量（offset）</strong></p>
+<p>因此一个内存的访问地址是 组标记 + cache line 索引 + 偏移量</p>
+<p>cpu通过这个能够在CPU cache里面找到缓存的数据。</p>
+<p>所以CPU cache中的数据结构就是 索引 + 有效位 + 组标记 + 数据块</p>
+<p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/2054/1659430793383-d462f7bb-0c5c-45bb-a74f-8c76e00c26da.png" class="lazyload" data-srcset="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/2054/1659430793383-d462f7bb-0c5c-45bb-a74f-8c76e00c26da.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="img"></p>
+<p>如果内存中的数据已经在CPU cache中了，那么CPU访问内存地址会经历以下4个步骤：</p>
+<ol>
+<li>根据内存访问地址的索引，取模计算计算CPU cache的索引</li>
+<li>拿到索引，根据有效位判断是否有效，无效则访问内存，有效则继续</li>
+<li>对比内存地址中的组标记和cache line 中的组标记,如果不是就直接访问内存。如果是的话就往下执行</li>
+<li>根据偏移量获取到相应的字</li>
+</ol>
+<h3 id="提高缓存命中率就能提高代码运行速度"><a href="#提高缓存命中率就能提高代码运行速度" class="headerlink" title="提高缓存命中率就能提高代码运行速度"></a>提高缓存命中率就能提高代码运行速度</h3><p>我们知道L1cache分为 数据缓存和指令缓存</p>
+<p>提高数据缓存命中，需要知道数据在缓存中的存储方式。比如，数组，二维数组等等。</p>
+<p>提高指令缓存命中，CPU 的<strong>分支预测器</strong>。对于 if 条件语句，意味着此时至少可以选择跳转到两段不同的指令执行，也就是 if 还是 else 中的指令。那么，<strong>如果分支预测可以预测到接下来要执行 if 里的指令，还是 else 指令的话，就可以「提前」把这些指令放在指令缓存中，这样 CPU 可以直接从 Cache 读取到指令，于是执行速度就会很快</strong>。</p>
+<p>比如先遍历再排序快，还是先排序再遍历呢？</p>
+<p>当数组中的元素是随机的，分支预测就无法有效工作，而当数组元素都是是顺序的，分支预测器会动态地根据历史命中数据对未来进行预测，这样命中率就会很高。</p>
+<p>因此，先排序再遍历速度会更快，这是因为排序之后，数字是从小到大的，那么前几次循环命中 if &lt; 50 的次数会比较多，于是分支预测就会缓存 if 里的 array[i] &#x3D; 0 指令到 Cache 中，后续 CPU 执行该指令就只需要从 Cache 读取就好了。</p>
+<p>如果你肯定代码中的 if 中的表达式判断为 true 的概率比较高，我们可以使用显示分支预测工具，</p>
+<h3 id="如何提升多核-CPU-的缓存命中率？"><a href="#如何提升多核-CPU-的缓存命中率？" class="headerlink" title="如何提升多核 CPU 的缓存命中率？"></a>如何提升多核 CPU 的缓存命中率？</h3><p>在单核 CPU，虽然只能执行一个线程，但是操作系统给每个线程分配了一个时间片，时间片用完了，就调度下一个线程，于是各个线程就按时间片交替地占用 CPU，从宏观上看起来各个线程同时在执行。</p>
+<p>而现代 CPU 都是多核心的，线程可能在不同 CPU 核心来回切换执行，这对 CPU Cache 不是有利的，虽然 L3 Cache 是多核心之间共享的，但是 L1 和 L2 Cache 都是每个核心独有的，<strong>如果一个线程在不同核心来回切换，各个核心的缓存命中率就会受到影响</strong>，相反如果线程都在同一个核心上执行，那么其数据的 L1 和 L2 Cache 的缓存命中率可以得到有效提高，缓存命中率高就意味着 CPU 可以减少访问 内存的频率。</p>
+<p>当有多个同时执行「计算密集型」的线程，为了防止因为切换到不同的核心，而导致缓存命中率下降的问题，我们可以把<strong>线程绑定在某一个 CPU 核心上</strong>，这样性能可以得到非常可观的提升。</p>
+<p>在 Linux 上提供了 sched_setaffinity 方法，来实现将线程绑定到某个 CPU 核心这一功能。</p>
+<p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/2054/1659434082488-af485fd5-c5c6-4045-8b93-5410fd3493af.png" class="lazyload" data-srcset="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/2054/1659434082488-af485fd5-c5c6-4045-8b93-5410fd3493af.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="img"></p>
 
 </div>
   </div>
@@ -2848,10 +2920,10 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateModified" datetime="2022-07-25T16:28:22+08:00">
+          <div class="new-meta-item date" itemprop="dateModified" datetime="2022-08-03T09:23:51+08:00">
   <a class='notlink'>
     <i class="fa-solid fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新于：Jul 25, 2022</p>
+    <p>更新于：Aug 3, 2022</p>
   </a>
 </div>
 
@@ -2999,7 +3071,7 @@ IO读写的基础原理有两种IO
 
 
     <div class='content'>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E7%81%B5%E6%9C%BA%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%96%B9%E5%BC%8F"><span class="toc-text">图灵机的工作方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%AF%E8%AF%BA%E4%BE%9D%E6%9B%BC%E6%A8%A1%E5%9E%8B"><span class="toc-text">冯诺依曼模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98"><span class="toc-text">内存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E5%A4%AE%E5%A4%84%E7%90%86%E5%99%A8"><span class="toc-text">中央处理器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BA%BF"><span class="toc-text">总线</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%93%E5%87%BA%E8%BE%93%E5%87%BA%E8%AE%BE%E5%A4%87"><span class="toc-text">输出输出设备</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%BF%E8%B7%AF%E4%BD%8D%E5%AE%BD%E4%B8%8ECPU%E4%BD%8D%E5%AE%BD"><span class="toc-text">线路位宽与CPU位宽</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#32%E4%BD%8D%E5%A6%82%E4%BD%95%E8%AE%A1%E7%AE%9764%E4%BD%8D%E5%A4%A7%E5%B0%8F%E7%9A%84%E6%95%B0%E5%AD%97%EF%BC%9F"><span class="toc-text">32位如何计算64位大小的数字？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A8%8B%E5%BA%8F%E6%89%A7%E8%A1%8C%E7%9A%84%E5%9F%BA%E6%9C%AC%E8%BF%87%E7%A8%8B"><span class="toc-text">程序执行的基本过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#a-x3D-1-2%E6%89%A7%E8%A1%8C%E5%85%B7%E4%BD%93%E8%BF%87%E7%A8%8B"><span class="toc-text">a &#x3D; 1 + 2执行具体过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#a-x3D-1-2-%E5%9C%A8-32%E4%BD%8DCPU%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%EF%BC%9A"><span class="toc-text">a &#x3D; 1 + 2 在 32位CPU的执行过程：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4"><span class="toc-text">指令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="toc-text">指令的类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4%E7%9A%84%E6%89%A7%E8%A1%8C%E9%80%9F%E5%BA%A6"><span class="toc-text">指令的执行速度</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E7%81%B5%E6%9C%BA%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%96%B9%E5%BC%8F"><span class="toc-text">图灵机的工作方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%AF%E8%AF%BA%E4%BE%9D%E6%9B%BC%E6%A8%A1%E5%9E%8B"><span class="toc-text">冯诺依曼模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98"><span class="toc-text">内存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E5%A4%AE%E5%A4%84%E7%90%86%E5%99%A8"><span class="toc-text">中央处理器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BA%BF"><span class="toc-text">总线</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%93%E5%87%BA%E8%BE%93%E5%87%BA%E8%AE%BE%E5%A4%87"><span class="toc-text">输出输出设备</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%BF%E8%B7%AF%E4%BD%8D%E5%AE%BD%E4%B8%8ECPU%E4%BD%8D%E5%AE%BD"><span class="toc-text">线路位宽与CPU位宽</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#32%E4%BD%8D%E5%A6%82%E4%BD%95%E8%AE%A1%E7%AE%9764%E4%BD%8D%E5%A4%A7%E5%B0%8F%E7%9A%84%E6%95%B0%E5%AD%97%EF%BC%9F"><span class="toc-text">32位如何计算64位大小的数字？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A8%8B%E5%BA%8F%E6%89%A7%E8%A1%8C%E7%9A%84%E5%9F%BA%E6%9C%AC%E8%BF%87%E7%A8%8B"><span class="toc-text">程序执行的基本过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#a-x3D-1-2%E6%89%A7%E8%A1%8C%E5%85%B7%E4%BD%93%E8%BF%87%E7%A8%8B"><span class="toc-text">a &#x3D; 1 + 2执行具体过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#a-x3D-1-2-%E5%9C%A8-32%E4%BD%8DCPU%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%EF%BC%9A"><span class="toc-text">a &#x3D; 1 + 2 在 32位CPU的执行过程：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4"><span class="toc-text">指令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="toc-text">指令的类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4%E7%9A%84%E6%89%A7%E8%A1%8C%E9%80%9F%E5%BA%A6"><span class="toc-text">指令的执行速度</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%99%A8%E7%9A%84%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84%E6%98%AF%E6%80%8E%E4%B9%88%E6%A0%B7%E7%9A%84%E5%91%A2%EF%BC%9F"><span class="toc-text">存储器的层次结构是怎么样的呢？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%84%E4%B8%AA%E5%AD%98%E5%82%A8%E5%99%A8%E7%9A%84%E7%BB%86%E8%8A%82%EF%BC%9A"><span class="toc-text">各个存储器的细节：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-1"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CPU%E6%98%AF%E6%80%8E%E4%B9%88%E8%AF%BB%E6%95%B0%E6%8D%AE%E7%9A%84%EF%BC%9F"><span class="toc-text">CPU是怎么读数据的？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CPU-cache%E7%9A%84%E7%BB%93%E6%9E%84"><span class="toc-text">CPU cache的结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%90%E9%AB%98%E7%BC%93%E5%AD%98%E5%91%BD%E4%B8%AD%E7%8E%87%E5%B0%B1%E8%83%BD%E6%8F%90%E9%AB%98%E4%BB%A3%E7%A0%81%E8%BF%90%E8%A1%8C%E9%80%9F%E5%BA%A6"><span class="toc-text">提高缓存命中率就能提高代码运行速度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%8F%90%E5%8D%87%E5%A4%9A%E6%A0%B8-CPU-%E7%9A%84%E7%BC%93%E5%AD%98%E5%91%BD%E4%B8%AD%E7%8E%87%EF%BC%9F"><span class="toc-text">如何提升多核 CPU 的缓存命中率？</span></a></li></ol></li></ol>
     </div>
   </section>
 
@@ -4361,7 +4433,7 @@ window.matchMedia('(prefers-color-scheme: light)').addListener(darkModelListener
 </script>
 
 
-  <script type="application/ld+json">[{"@context":"http://schema.org","@type":"Organization","name":"Hexo","url":"http://example.com/","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1654736714924/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},{"@context":"http://schema.org","@type":"Person","name":"John Doe","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1654736714924/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"http://example.com/","sameAs":["https://github.com/volantis-x"],"description":"kk的博客啦"},{"@context":"http://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"http://example.com/","name":"Hexo"}},{"@type":"ListItem","position":2,"item":{"@id":"http://example.com/categories/操作系统/","name":"操作系统"}},{"@type":"ListItem","position":3,"item":{"@id":"http://example.com/2020/07/05/操作系统/硬件结构/","name":"硬件结构"}}]},{"@context":"http://schema.org","@type":"WebSite","name":"Hexo","url":"http://example.com/","keywords":null,"description":"kk的博客啦","author":{"@type":"Person","name":"John Doe","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1654736714924/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"http://example.com/","description":"kk的博客啦"},"publisher":{"@type":"Organization","name":"Hexo","url":"http://example.com/","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1654736714924/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},"potentialAction":{"@type":"SearchAction","name":"Site Search","target":{"@type":"EntryPoint","urlTemplate":"http://example.com?s={search_term_string}"},"query-input":"required name=search_term_string"}},{"@context":"http://schema.org","@type":"BlogPosting","headline":"硬件结构","description":"kk的博客啦","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2020/07/05/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%A1%AC%E4%BB%B6%E7%BB%93%E6%9E%84/"},"author":{"@type":"Person","name":"John Doe","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1654736714924/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"http://example.com/"},"publisher":{"@type":"Organization","name":"Hexo","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1654736714924/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},"url":"http://example.com/2020/07/05/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%A1%AC%E4%BB%B6%E7%BB%93%E6%9E%84/","wordCount":0,"datePublished":"2020-07-04T19:00:00.000Z","dateModified":"2022-07-25T08:28:22.631Z","articleSection":"操作系统","keywords":"硬件结构","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1654736714924/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}}]</script>
+  <script type="application/ld+json">[{"@context":"http://schema.org","@type":"Organization","name":"Hexo","url":"http://example.com/","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1654736714924/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},{"@context":"http://schema.org","@type":"Person","name":"John Doe","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1654736714924/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"http://example.com/","sameAs":["https://github.com/volantis-x"],"description":"kk的博客啦"},{"@context":"http://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"http://example.com/","name":"Hexo"}},{"@type":"ListItem","position":2,"item":{"@id":"http://example.com/categories/操作系统/","name":"操作系统"}},{"@type":"ListItem","position":3,"item":{"@id":"http://example.com/2020/07/05/操作系统/硬件结构/","name":"硬件结构"}}]},{"@context":"http://schema.org","@type":"WebSite","name":"Hexo","url":"http://example.com/","keywords":null,"description":"kk的博客啦","author":{"@type":"Person","name":"John Doe","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1654736714924/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"http://example.com/","description":"kk的博客啦"},"publisher":{"@type":"Organization","name":"Hexo","url":"http://example.com/","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1654736714924/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},"potentialAction":{"@type":"SearchAction","name":"Site Search","target":{"@type":"EntryPoint","urlTemplate":"http://example.com?s={search_term_string}"},"query-input":"required name=search_term_string"}},{"@context":"http://schema.org","@type":"BlogPosting","headline":"硬件结构","description":"kk的博客啦","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2020/07/05/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%A1%AC%E4%BB%B6%E7%BB%93%E6%9E%84/"},"author":{"@type":"Person","name":"John Doe","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1654736714924/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"http://example.com/"},"publisher":{"@type":"Organization","name":"Hexo","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1654736714924/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},"url":"http://example.com/2020/07/05/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%A1%AC%E4%BB%B6%E7%BB%93%E6%9E%84/","wordCount":0,"datePublished":"2020-07-04T19:00:00.000Z","dateModified":"2022-08-03T01:23:51.229Z","articleSection":"操作系统","keywords":"硬件结构","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1654736714924/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}}]</script>
 
 
 
